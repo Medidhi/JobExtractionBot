@@ -8,3 +8,9 @@ jobsearches:
     - position: software engineer
       location: new york
 outputFilePath: output/
+email:
+    emailPassword: xxxxxxxxxx
+    from: venkatganesh.1596@gmail.com
+    to: venkatganesh.1596@gmail.com
+    subject: Job applications
+    body: Apply to all the jost listing below.... Have fun!!!
