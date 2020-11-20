@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import sys
+import os
 
 def get_url(position, location):
     url = "https://www.indeed.com/jobs?q={}&l={}".format(position, location)
@@ -19,7 +20,6 @@ def get_Records(cards):
         record["company"] = job.find("span", "company").text.strip()
         record["location"] = job.find("div", "recJobLoc").get("data-rc-loc")
         record["posted_date"] = job.find("span", "date").text
-        record["salary"] = job.find("span", "date").text
         job_records.append(record)
     return job_records
 
@@ -42,6 +42,17 @@ def extract_jobs(position, location):
         jobrecord.extend(get_Records(cards))
     return jobrecord
 
-if name == "__main__":
-    data = pd.DataFrame(extract_jobs(sys.argv[1], sys.argv[2]))
-    data.to_excel((sys.argv[3]+"{}_{}_{}.xlsx").format(datetime.today(), sys.argv[1], sys.argv[2]))
+if __name__ == "__main__":
+    position = sys.argv[1].replace("#", " ")
+    location = sys.argv[2].replace("#", " ")
+    otputFilePath = sys.argv[3].replace("#", " ")
+
+    data = pd.DataFrame(extract_jobs(position, location))
+    path = otputFilePath + str(datetime.date(datetime.now())) + "/"
+
+    print(path)
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        print("file already exists")
+    data.to_excel((path + "{}_{}.xlsx").format(position, location))

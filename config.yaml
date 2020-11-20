@@ -1,0 +1,10 @@
+jobsearches:
+    - position: software engineer
+      location: california
+    - position: software engineer intern
+      location: california
+    - position: accoutant
+      location: california
+    - position: software engineer
+      location: new york
+outputFilePath: output/
