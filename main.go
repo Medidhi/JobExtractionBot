@@ -12,11 +12,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+// job search details structure
+// used to the config details
 type jobsearch struct {
 	Position string
 	Location string
 }
 
+// config details for emailing purpose
 type email struct {
 	EmailPassword string
 	From          string
@@ -25,12 +28,14 @@ type email struct {
 	Body          string
 }
 
+// config details structure
 type Config struct {
 	Jobsearchs      []jobsearch
 	OutputDirectory string
 	Email           email
 }
 
+// function to load config
 func LoadConfiguration() Config {
 	var config Config
 
@@ -48,6 +53,7 @@ func LoadConfiguration() Config {
 	return config
 }
 
+// based on job description and location extract job listing from indeed
 func ExtractJob(position string, localtion string, outputPath string) {
 
 	position = strings.ReplaceAll(position, " ", "#")
@@ -61,6 +67,7 @@ func ExtractJob(position string, localtion string, outputPath string) {
 
 }
 
+// funtion to recursively go though all thr file to zip them
 func addFiles(w *zip.Writer, basePath, baseInZip string) {
 	// Open the Directory
 	files, err := ioutil.ReadDir(basePath)
@@ -97,6 +104,7 @@ func addFiles(w *zip.Writer, basePath, baseInZip string) {
 	}
 }
 
+// funtion to zip a directory
 func ZipWriter(source string, destination string) {
 	baseFolder := source
 
@@ -124,6 +132,7 @@ func ZipWriter(source string, destination string) {
 	}
 }
 
+// function to send email alerts
 func sendEmails(config Config) {
 	os.MkdirAll(config.OutputDirectory, os.ModePerm)
 	ZipWriter(config.OutputDirectory, "./jobs.zip")
@@ -134,6 +143,7 @@ func sendEmails(config Config) {
 	fmt.Println("Sent job listing email")
 }
 
+// funtion to create calendar event based on the extraction date
 func createCalendarEvent(stringDate string) {
 	cmd := exec.Command("python3", "createCalendarEvent.py", stringDate)
 	if err := cmd.Run(); err != nil {
