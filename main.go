@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -133,6 +134,13 @@ func sendEmails(config Config) {
 	fmt.Println("Sent job listing email")
 }
 
+func createCalendarEvent(stringDate string) {
+	cmd := exec.Command("python3", "createCalendarEvent.py", stringDate)
+	if err := cmd.Run(); err != nil {
+		fmt.Println(err)
+	}
+}
+
 func main() {
 	c := LoadConfiguration()
 	// parallel processing
@@ -143,5 +151,9 @@ func main() {
 
 	fmt.Printf("Finished job parsing")
 	sendEmails(c)
+
+	// add two days to current date to get set the calenndar event
+	t := time.Now().AddDate(0, 0, 2)
+	createCalendarEvent(t.Format("2006-01-02"))
 
 }
